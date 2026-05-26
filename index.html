@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IA Comparativa — Ceará Científico</title>
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      min-height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      margin-top: 6px;
+      font-size: 14px;
+      opacity: 0.6;
+    }
+
+    /* ── Pergunta ── */
+    .pergunta-box {
+      width: 100%;
+      max-width: 900px;
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .pergunta-box textarea {
+      flex: 1;
+      min-height: 50px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: #0f172a;
+      color: white;
+      padding: 12px;
+      font-size: 15px;
+      resize: none;
+      transition: 0.3s;
+    }
+
+    .pergunta-box textarea:focus {
+      outline: none;
+      border-color: #38bdf8;
+    }
+
+    .pergunta-box button {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+      height: 50px;
+    }
+
+    .pergunta-box button:hover {
+      filter: brightness(1.1);
+      transform: scale(1.02);
+    }
+
+    .pergunta-box button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ── Linha de conexão visual ── */
+    .conexao {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .linha-vertical {
+      width: 2px;
+      height: 20px;
+      background: #475569;
+    }
+
+    /* ── Grid 3 colunas ── */
+    .grid-ias {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    /* ── Card IA (topo) ── */
+    .ia-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      border: 2px solid #334155;
+      transition: 0.3s;
+    }
+
+    .ia-card img {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: white;
+      padding: 4px;
+      object-fit: cover;
+    }
+
+    .ia-card h3 {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+
+    .ia-card p {
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    /* ── Linhas verticais de conexão ── */
+    .conexoes-grid {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .conexao-item {
+      display: flex;
+      justify-content: center;
+    }
+
+    .conexao-item .linha-v {
+      width: 2px;
+      height: 20px;
+      background: #38bdf8;
+    }
+
+    /* ── Cards de resposta ── */
+    .grid-respostas {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .resposta-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      border: 2px solid #1e40af;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resposta-card .label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #38bdf8;
+      margin-bottom: 10px;
+    }
+
+    .resposta-texto {
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0.9;
+      flex: 1;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      max-height: 300px;
+    }
+
+    .resposta-texto::-webkit-scrollbar { width: 5px; }
+    .resposta-texto::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+
+    .placeholder-msg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      opacity: 0.3;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .carregando {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      opacity: 0.6;
+    }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid #334155;
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .erro { color: #f87171; font-size: 13px; }
+
+    /* ── Seção de avaliação ── */
+    .avaliacao-section {
+      width: 100%;
+      max-width: 900px;
+      display: none;
+    }
+
+    .avaliacao-section.ativa { display: block; }
+
+    .avaliacao-titulo {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .grid-avaliacao {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .avaliacao-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .avaliacao-card h4 {
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .estrelas {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .estrela {
+      font-size: 26px;
+      cursor: pointer;
+      opacity: 0.3;
+      transition: 0.2s;
+    }
+
+    .estrela:hover,
+    .estrela.ativa { opacity: 1; }
+
+    .avaliacao-card textarea {
+      width: 100%;
+      min-height: 40px;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      background: #0f172a;
+      color: white;
+      padding: 8px;
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    .avaliacao-card textarea:focus {
+      outline: none;
+      border-color: #38bdf8;
+    }
+
+    .perguntas-finais {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .perguntas-finais h3 {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .opcoes-radio {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .opcoes-radio label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 10px;
+      background: #0f172a;
+      transition: 0.2s;
+    }
+
+    .opcoes-radio label:hover { background: #334155; }
+    .opcoes-radio input[type="radio"] { accent-color: #38bdf8; }
+
+    .btn-resultado {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-resultado:hover { filter: brightness(1.1); }
+
+    /* ── Resultado ── */
+    .resultado-section {
+      width: 100%;
+      max-width: 900px;
+      display: none;
+    }
+
+    .resultado-section.ativa { display: block; }
+
+    .resultado-titulo {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #22c55e, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .grid-resultado {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .resultado-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .resultado-card img {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: white;
+      padding: 3px;
+    }
+
+    .resultado-card h4 { font-size: 15px; margin-top: 6px; }
+    .resultado-card .nota-grande {
+      font-size: 32px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin: 6px 0;
+    }
+
+    .resultado-card .comentario {
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    .resumo-box {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .botoes-finais {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .botoes-finais button {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      color: white;
+    }
+
+    .botoes-finais .btn-novo { background: linear-gradient(135deg, #38bdf8, #a78bfa); }
+    .botoes-finais .btn-novo:hover { filter: brightness(1.1); }
+    .botoes-finais .btn-csv { background: #334155; }
+    .botoes-finais .btn-csv:hover { background: #475569; }
+
+    .contador {
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.4;
+    }
+
+    /* ── Historico ── */
+    .historico-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #38bdf8, #a78bfa);
+      color: white;
+      border: none;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+      transition: 0.3s;
+      z-index: 10;
+    }
+
+    .historico-btn:hover { transform: scale(1.1); }
+
+    /* ── Responsivo ── */
+    @media (max-width: 700px) {
+      .grid-ias,
+      .grid-respostas,
+      .conexoes-grid,
+      .grid-avaliacao,
+      .grid-resultado {
+        grid-template-columns: 1fr;
+      }
+
+      .conexoes-grid { display: none; }
+
+      .pergunta-box {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .pergunta-box button {
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>IA Comparativa</h1>
+    <p>Como diferentes IAs influenciam decisões humanas?</p>
+  </div>
+
+  <!-- Pergunta -->
+  <div class="pergunta-box">
+    <textarea id="pergunta" placeholder="Digite sua pergunta aqui..." rows="2"></textarea>
+    <button id="btnEnviar" onclick="enviarPergunta()">Enviar</button>
+  </div>
+
+  <!-- Linha central -->
+  <div class="conexao"><div class="linha-vertical"></div></div>
+
+  <!-- 3 IAs -->
+  <div class="grid-ias">
+    <div class="ia-card" id="card-gpt">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"/>
+      <h3>ChatGPT</h3>
+      <p>OpenAI</p>
+    </div>
+    <div class="ia-card" id="card-claude">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg"/>
+      <h3>Claude</h3>
+      <p>Anthropic</p>
+    </div>
+    <div class="ia-card" id="card-gemini">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Google-gemini-icon.svg"/>
+      <h3>Gemini</h3>
+      <p>Google</p>
+    </div>
+  </div>
+
+  <!-- Linhas de conexão -->
+  <div class="conexoes-grid">
+    <div class="conexao-item"><div class="linha-v"></div></div>
+    <div class="conexao-item"><div class="linha-v"></div></div>
+    <div class="conexao-item"><div class="linha-v"></div></div>
+  </div>
+
+  <!-- 3 Respostas -->
+  <div class="grid-respostas">
+    <div class="resposta-card" id="resp-gpt">
+      <div class="label">Resposta — ChatGPT</div>
+      <div class="resposta-texto" id="texto-gpt">
+        <div class="placeholder-msg">Aguardando pergunta...</div>
+      </div>
+    </div>
+    <div class="resposta-card" id="resp-claude">
+      <div class="label">Resposta — Claude</div>
+      <div class="resposta-texto" id="texto-claude">
+        <div class="placeholder-msg">Aguardando pergunta...</div>
+      </div>
+    </div>
+    <div class="resposta-card" id="resp-gemini">
+      <div class="label">Resposta — Gemini</div>
+      <div class="resposta-texto" id="texto-gemini">
+        <div class="placeholder-msg">Aguardando pergunta...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avaliação -->
+  <div class="avaliacao-section" id="avaliacaoSection">
+    <h2 class="avaliacao-titulo">Avalie as respostas</h2>
+
+    <div class="grid-avaliacao" id="gridAvaliacao">
+      <div class="avaliacao-card">
+        <h4>ChatGPT</h4>
+        <div class="estrelas" id="estrelas-gpt">
+          <span class="estrela" onclick="darNota('gpt',1)">★</span>
+          <span class="estrela" onclick="darNota('gpt',2)">★</span>
+          <span class="estrela" onclick="darNota('gpt',3)">★</span>
+          <span class="estrela" onclick="darNota('gpt',4)">★</span>
+          <span class="estrela" onclick="darNota('gpt',5)">★</span>
+        </div>
+        <textarea placeholder="Comentário..." oninput="estado.comentarios.gpt=this.value"></textarea>
+      </div>
+      <div class="avaliacao-card">
+        <h4>Claude</h4>
+        <div class="estrelas" id="estrelas-claude">
+          <span class="estrela" onclick="darNota('claude',1)">★</span>
+          <span class="estrela" onclick="darNota('claude',2)">★</span>
+          <span class="estrela" onclick="darNota('claude',3)">★</span>
+          <span class="estrela" onclick="darNota('claude',4)">★</span>
+          <span class="estrela" onclick="darNota('claude',5)">★</span>
+        </div>
+        <textarea placeholder="Comentário..." oninput="estado.comentarios.claude=this.value"></textarea>
+      </div>
+      <div class="avaliacao-card">
+        <h4>Gemini</h4>
+        <div class="estrelas" id="estrelas-gemini">
+          <span class="estrela" onclick="darNota('gemini',1)">★</span>
+          <span class="estrela" onclick="darNota('gemini',2)">★</span>
+          <span class="estrela" onclick="darNota('gemini',3)">★</span>
+          <span class="estrela" onclick="darNota('gemini',4)">★</span>
+          <span class="estrela" onclick="darNota('gemini',5)">★</span>
+        </div>
+        <textarea placeholder="Comentário..." oninput="estado.comentarios.gemini=this.value"></textarea>
+      </div>
+    </div>
+
+    <div class="perguntas-finais">
+      <h3>Qual IA mais influenciou sua decisão?</h3>
+      <div class="opcoes-radio">
+        <label><input type="radio" name="influente" value="gpt"/> ChatGPT</label>
+        <label><input type="radio" name="influente" value="claude"/> Claude</label>
+        <label><input type="radio" name="influente" value="gemini"/> Gemini</label>
+        <label><input type="radio" name="influente" value="nenhuma"/> Nenhuma</label>
+      </div>
+
+      <h3>Você seguiria o conselho da IA?</h3>
+      <div class="opcoes-radio">
+        <label><input type="radio" name="seguiria" value="sim"/> Sim, totalmente</label>
+        <label><input type="radio" name="seguiria" value="parcial"/> Parcialmente</label>
+        <label><input type="radio" name="seguiria" value="nao"/> Não</label>
+      </div>
+    </div>
+
+    <button class="btn-resultado" onclick="finalizarAvaliacao()">Ver Resultado</button>
+  </div>
+
+  <!-- Resultado -->
+  <div class="resultado-section" id="resultadoSection">
+    <h2 class="resultado-titulo">Resultado da Investigação</h2>
+
+    <div class="grid-resultado" id="gridResultado"></div>
+
+    <div class="resumo-box" id="resumoFinal"></div>
+
+    <div class="botoes-finais">
+      <button class="btn-novo" onclick="novaInvestigacao()">Nova Investigação</button>
+      <button class="btn-csv" onclick="exportarDados()">Exportar CSV</button>
+    </div>
+
+    <p class="contador" id="totalInvestigacoes"></p>
+  </div>
+
+  <button class="historico-btn" onclick="verHistorico()" title="Ver histórico">📊</button>
+
+<script>
+  puter.quiet = true;
+
+  const IAS = {
+    gpt:    { nome: "ChatGPT", modelo: "gpt-4o-mini",            logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" },
+    claude: { nome: "Claude",  modelo: "claude-3-5-haiku-latest", logo: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg" },
+    gemini: { nome: "Gemini",  modelo: "gemini-2.0-flash",       logo: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Google-gemini-icon.svg" }
+  };
+
+  let estado = {
+    pergunta: "",
+    respostas: {},
+    notas: {},
+    comentarios: {},
+    influente: null,
+    seguiria: null
+  };
+
+  let historico = JSON.parse(localStorage.getItem("historico_ia") || "[]");
+
+  // ── Enviar pergunta ──
+  async function enviarPergunta() {
+    const pergunta = document.getElementById("pergunta").value.trim();
+    if (!pergunta) return;
+
+    if (!puter.authToken) {
+      try {
+        await puter.ui.signIn();
+      } catch (e) {
+        alert("Para consultar as IAs, permita o popup para login gratuito no Puter e tente novamente.");
+        return;
+      }
+    }
+
+    estado.pergunta = pergunta;
+    estado.respostas = {};
+
+    document.getElementById("btnEnviar").disabled = true;
+    document.getElementById("btnEnviar").textContent = "Enviando...";
+
+    document.getElementById("avaliacaoSection").classList.remove("ativa");
+    document.getElementById("resultadoSection").classList.remove("ativa");
+
+    ["gpt", "claude", "gemini"].forEach(ia => {
+      document.getElementById("texto-" + ia).innerHTML = '<div class="carregando"><div class="spinner"></div> Pensando...</div>';
+    });
+
+    let respostasRecebidas = 0;
+
+    for (const ia of ["gpt", "claude", "gemini"]) {
+      consultarIA(ia, pergunta, () => {
+        respostasRecebidas++;
+        if (respostasRecebidas >= 3) {
+          document.getElementById("btnEnviar").disabled = false;
+          document.getElementById("btnEnviar").textContent = "Enviar";
+          document.getElementById("avaliacaoSection").classList.add("ativa");
+          document.getElementById("avaliacaoSection").scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+  }
+
+  async function consultarIA(ia, pergunta, onDone) {
+    const config = IAS[ia];
+    const textoEl = document.getElementById("texto-" + ia);
+
+    try {
+      const resposta = await puter.ai.chat(pergunta, { model: config.modelo });
+
+      let texto = "";
+      if (resposta && resposta.message && resposta.message.content) {
+        if (Array.isArray(resposta.message.content)) {
+          texto = resposta.message.content.map(c => c.text || c).join("");
+        } else {
+          texto = resposta.message.content;
+        }
+      } else if (typeof resposta === "string") {
+        texto = resposta;
+      } else {
+        texto = JSON.stringify(resposta);
+      }
+
+      estado.respostas[ia] = texto;
+      textoEl.textContent = texto;
+    } catch (err) {
+      estado.respostas[ia] = "[Erro]";
+      textoEl.innerHTML = '<span class="erro">Erro: ' + err.message + '</span>';
+    }
+
+    onDone();
+  }
+
+  // ── Notas ──
+  function darNota(ia, nota) {
+    estado.notas[ia] = nota;
+    const estrelas = document.querySelectorAll(`#estrelas-${ia} .estrela`);
+    estrelas.forEach((e, i) => e.classList.toggle("ativa", i < nota));
+  }
+
+  // ── Resultado ──
+  function finalizarAvaliacao() {
+    const radInfluente = document.querySelector('input[name="influente"]:checked');
+    const radSeguiria = document.querySelector('input[name="seguiria"]:checked');
+    estado.influente = radInfluente ? radInfluente.value : null;
+    estado.seguiria = radSeguiria ? radSeguiria.value : null;
+
+    const grid = document.getElementById("gridResultado");
+    grid.innerHTML = "";
+
+    let melhor = null, melhorNota = 0;
+
+    ["gpt", "claude", "gemini"].forEach(ia => {
+      const config = IAS[ia];
+      const nota = estado.notas[ia] || 0;
+      if (nota > melhorNota) { melhorNota = nota; melhor = ia; }
+
+      const card = document.createElement("div");
+      card.className = "resultado-card";
+      card.innerHTML = `
+        <img src="${config.logo}"/>
+        <h4>${config.nome}</h4>
+        <div class="nota-grande">${nota > 0 ? "★ " + nota : "—"}</div>
+        <p class="comentario">${estado.comentarios[ia] || "Sem comentário"}</p>
+      `;
+      grid.appendChild(card);
+    });
+
+    const resumo = document.getElementById("resumoFinal");
+    const influenciou = estado.influente && estado.influente !== "nenhuma"
+      ? `A IA que mais influenciou a decisão foi <strong>${IAS[estado.influente].nome}</strong>.`
+      : "Nenhuma IA influenciou diretamente a decisão.";
+
+    const seguiriaTexto = {
+      sim: "O participante seguiria totalmente o conselho da IA.",
+      parcial: "O participante seguiria parcialmente o conselho.",
+      nao: "O participante não seguiria o conselho da IA."
+    };
+
+    resumo.innerHTML = `
+      <p><strong>Pergunta:</strong> ${estado.pergunta}</p>
+      <p style="margin-top:8px;">${influenciou}</p>
+      <p>${seguiriaTexto[estado.seguiria] || ""}</p>
+      ${melhor ? `<p style="margin-top:8px;">Melhor avaliada: <strong>${IAS[melhor].nome}</strong> com nota ${melhorNota}/5.</p>` : ""}
+    `;
+
+    historico.push({
+      data: new Date().toISOString(),
+      pergunta: estado.pergunta,
+      notas: { ...estado.notas },
+      comentarios: { ...estado.comentarios },
+      respostas: { ...estado.respostas },
+      influente: estado.influente,
+      seguiria: estado.seguiria
+    });
+    localStorage.setItem("historico_ia", JSON.stringify(historico));
+
+    document.getElementById("totalInvestigacoes").textContent =
+      "Total de investigações: " + historico.length;
+
+    document.getElementById("avaliacaoSection").classList.remove("ativa");
+    document.getElementById("resultadoSection").classList.add("ativa");
+    document.getElementById("resultadoSection").scrollIntoView({ behavior: "smooth" });
+  }
+
+  // ── Nova investigação ──
+  function novaInvestigacao() {
+    estado = { pergunta: "", respostas: {}, notas: {}, comentarios: {}, influente: null, seguiria: null };
+
+    document.getElementById("pergunta").value = "";
+    document.getElementById("resultadoSection").classList.remove("ativa");
+    document.getElementById("avaliacaoSection").classList.remove("ativa");
+
+    ["gpt", "claude", "gemini"].forEach(ia => {
+      document.getElementById("texto-" + ia).innerHTML = '<div class="placeholder-msg">Aguardando pergunta...</div>';
+      document.querySelectorAll(`#estrelas-${ia} .estrela`).forEach(e => e.classList.remove("ativa"));
+    });
+
+    document.querySelectorAll(".avaliacao-card textarea").forEach(t => t.value = "");
+    document.querySelectorAll('input[name="influente"], input[name="seguiria"]').forEach(r => r.checked = false);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // ── Exportar CSV ──
+  function exportarDados() {
+    if (historico.length === 0) { alert("Nenhum dado para exportar."); return; }
+
+    let csv = "Data,Pergunta,Nota_ChatGPT,Nota_Claude,Nota_Gemini,IA_Influente,Seguiria\n";
+    historico.forEach(r => {
+      csv += [
+        r.data,
+        '"' + (r.pergunta || "").replace(/"/g, '""') + '"',
+        r.notas.gpt    || "",
+        r.notas.claude  || "",
+        r.notas.gemini  || "",
+        r.influente || "",
+        r.seguiria  || ""
+      ].join(",") + "\n";
+    });
+
+    const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "dados_ia_comparativa.csv";
+    link.click();
+  }
+
+  // ── Histórico ──
+  function verHistorico() {
+    if (historico.length === 0) { alert("Nenhuma investigação realizada ainda."); return; }
+
+    let txt = "=== HISTÓRICO ===\n\n";
+    historico.forEach((r, i) => {
+      txt += `#${i + 1}\nPergunta: ${r.pergunta}\n`;
+      txt += `Notas: ChatGPT=${r.notas.gpt||"-"} | Claude=${r.notas.claude||"-"} | Gemini=${r.notas.gemini||"-"}\n`;
+      txt += `Influenciou: ${r.influente || "-"} | Seguiria: ${r.seguiria || "-"}\n\n`;
+    });
+    alert(txt);
+  }
+</script>
+
+</body>
+</html>
