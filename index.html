@@ -218,6 +218,7 @@
     <p>Para consultar as IAs, conecte-se com sua conta gratuita:</p>
     <button class="btn-login" onclick="fazerLogin()">Entrar</button>
     <p style="font-size:12px; opacity:.4;">Conta gratuita via Puter • Sem cartão de crédito</p>
+    <p id="loginMsg" style="font-size:13px; opacity:.6; max-width:400px; margin-top:8px;"></p>
   </div>
 
   <!-- APP (aparece após login) -->
@@ -340,11 +341,22 @@
 
   // ── Login ──
   async function fazerLogin() {
+    const btn = document.querySelector(".btn-login");
+    btn.textContent = "Abrindo login...";
+    btn.disabled = true;
+
     try {
       await puter.ui.signIn();
       mostrarApp();
     } catch(e) {
-      alert("Permita o popup no navegador e tente novamente.");
+      btn.textContent = "Entrar";
+      btn.disabled = false;
+
+      // Se popup bloqueado, tenta redirect
+      const msg = document.getElementById("loginMsg");
+      msg.innerHTML = '⚠️ Popup bloqueado! <a href="https://puter.com" target="_blank" style="color:#38bdf8; text-decoration:underline;">Clique aqui para fazer login no Puter</a>, depois volte e recarregue esta página.';
+      msg.style.opacity = "1";
+      msg.style.color = "#fbbf24";
     }
   }
 
@@ -356,7 +368,7 @@
   // Auto-detecta se já logado
   setTimeout(() => {
     if (puter.authToken) mostrarApp();
-  }, 500);
+  }, 800);
 
   // ── Enviar ──
   async function enviar() {
