@@ -27,23 +27,8 @@
     }
     .header p { margin-top:6px; font-size:14px; opacity:.6; }
 
-    /* ── Login ── */
-    .login-tela {
-      display:flex; flex-direction:column; align-items:center;
-      gap:16px; margin-top:40px;
-    }
-    .login-tela p { font-size:15px; opacity:.7; text-align:center; }
-    .btn-login {
-      padding:14px 40px; border-radius:14px; border:none;
-      background:linear-gradient(135deg,#38bdf8,#a78bfa);
-      color:white; font-size:17px; font-weight:600;
-      cursor:pointer; transition:.3s;
-    }
-    .btn-login:hover { filter:brightness(1.1); transform:scale(1.03); }
-
-    /* ── App (escondido até login) ── */
-    .app-conteudo { display:none; width:100%; max-width:920px; }
-    .app-conteudo.ativo { display:flex; flex-direction:column; align-items:center; }
+    /* ── App ── */
+    .app-conteudo { width:100%; max-width:920px; display:flex; flex-direction:column; align-items:center; }
 
     /* ── Pergunta ── */
     .pergunta-box {
@@ -213,16 +198,8 @@
     <p>Como diferentes IAs influenciam decisões humanas?</p>
   </div>
 
-  <!-- TELA LOGIN -->
-  <div class="login-tela" id="telaLogin">
-    <p>Para consultar as IAs, conecte-se com sua conta gratuita:</p>
-    <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-    <p style="font-size:12px; opacity:.4;">Conta gratuita via Puter • Sem cartão de crédito</p>
-    <p id="loginMsg" style="font-size:13px; opacity:.6; max-width:400px; margin-top:8px;"></p>
-  </div>
-
-  <!-- APP (aparece após login) -->
-  <div class="app-conteudo" id="appConteudo">
+  <!-- APP -->
+  <div class="app-conteudo ativo" id="appConteudo">
 
     <div class="pergunta-box">
       <textarea id="pergunta" placeholder="Tenho 17 anos e recebi uma boa proposta de emprego, mas precisaria trancar o ensino médio. O que devo fazer?" rows="2"></textarea>
@@ -339,36 +316,7 @@
   let E = { pergunta:"", respostas:{}, notas:{}, comentarios:{}, influente:null, seguiria:null };
   let hist = JSON.parse(localStorage.getItem("hist_ia") || "[]");
 
-  // ── Login ──
-  async function fazerLogin() {
-    const btn = document.querySelector(".btn-login");
-    btn.textContent = "Abrindo login...";
-    btn.disabled = true;
-
-    try {
-      await puter.ui.signIn();
-      mostrarApp();
-    } catch(e) {
-      btn.textContent = "Entrar";
-      btn.disabled = false;
-
-      // Se popup bloqueado, tenta redirect
-      const msg = document.getElementById("loginMsg");
-      msg.innerHTML = '⚠️ Popup bloqueado! <a href="https://puter.com" target="_blank" style="color:#38bdf8; text-decoration:underline;">Clique aqui para fazer login no Puter</a>, depois volte e recarregue esta página.';
-      msg.style.opacity = "1";
-      msg.style.color = "#fbbf24";
-    }
-  }
-
-  function mostrarApp() {
-    document.getElementById("telaLogin").style.display = "none";
-    document.getElementById("appConteudo").classList.add("ativo");
-  }
-
-  // Auto-detecta se já logado
-  setTimeout(() => {
-    if (puter.authToken) mostrarApp();
-  }, 800);
+  // Sem tela de login — app direto
 
   // ── Enviar ──
   async function enviar() {
