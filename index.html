@@ -208,7 +208,10 @@
       const el = document.getElementById("texto-"+ia);
 
       try {
-        const res = await puter.ai.chat(p, { model: cfg.modelo });
+        const res = await puter.ai.chat([
+          { role:"system", content:"Responda sempre em português brasileiro." },
+          { role:"user", content: p }
+        ], { model: cfg.modelo });
 
         let txt = "";
         if (res?.message?.content) {
