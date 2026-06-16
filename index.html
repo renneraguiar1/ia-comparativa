@@ -138,8 +138,8 @@
         <h3>ChatGPT</h3><p>OpenAI</p>
       </div>
       <div class="ia-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg"/>
-        <h3>Claude</h3><p>Anthropic</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/ec/DeepSeek_logo.svg"/>
+        <h3>DeepSeek</h3><p>DeepSeek AI</p>
       </div>
       <div class="ia-card">
         <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Google-gemini-icon.svg"/>
@@ -159,8 +159,8 @@
         <div class="resposta-texto" id="texto-gpt"><div class="placeholder">Aguardando pergunta...</div></div>
       </div>
       <div class="resposta-card">
-        <div class="resposta-label">Resposta — Claude</div>
-        <div class="resposta-texto" id="texto-claude"><div class="placeholder">Aguardando pergunta...</div></div>
+        <div class="resposta-label">Resposta — DeepSeek</div>
+        <div class="resposta-texto" id="texto-deepseek"><div class="placeholder">Aguardando pergunta...</div></div>
       </div>
       <div class="resposta-card">
         <div class="resposta-label">Resposta — Gemini</div>
@@ -177,7 +177,7 @@
 
   const IAS = {
     gpt:    { nome:"ChatGPT", modelo:"gpt-4o-mini",          logo:"https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" },
-    claude: { nome:"Claude",  modelo:"claude-sonnet-4.5", logo:"https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg" },
+    deepseek: { nome:"DeepSeek", modelo:"deepseek-v3.2", logo:"https://upload.wikimedia.org/wikipedia/commons/e/ec/DeepSeek_logo.svg" },
     gemini: { nome:"Gemini",  modelo:"gemini-2.5-flash-lite", logo:"https://upload.wikimedia.org/wikipedia/commons/8/8f/Google-gemini-icon.svg" }
   };
 
@@ -197,13 +197,13 @@
     btn.disabled = true;
     btn.textContent = "Enviando...";
 
-    ["gpt","claude","gemini"].forEach(ia => {
+    ["gpt","deepseek","gemini"].forEach(ia => {
       document.getElementById("texto-"+ia).innerHTML = '<div class="carregando"><div class="spinner"></div> Pensando...</div>';
     });
 
     let done = 0;
 
-    ["gpt","claude","gemini"].forEach(async ia => {
+    ["gpt","deepseek","gemini"].forEach(async ia => {
       const cfg = IAS[ia];
       const el = document.getElementById("texto-"+ia);
 
