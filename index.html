@@ -9,9 +9,9 @@
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
 
     body {
-      background:#0f172a;
+      background:#f5f5f0;
       min-height:100vh;
-      color:white;
+      color:#1a1a1a;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -21,42 +21,46 @@
     .header { text-align:center; margin-bottom:20px; }
     .header h1 {
       font-size:32px;
-      background:linear-gradient(135deg,#38bdf8,#a78bfa);
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
+      color:#006B3F;
+      font-weight:800;
     }
-    .header p { margin-top:6px; font-size:14px; opacity:.6; }
+    .header p { margin-top:6px; font-size:14px; color:#555; }
+    .header .faixa {
+      width:80px; height:4px; background:#FFCC29;
+      margin:10px auto 0; border-radius:2px;
+    }
 
     /* ── App ── */
     .app-conteudo { width:100%; max-width:920px; display:flex; flex-direction:column; align-items:center; }
 
     /* ── Pergunta ── */
     .pergunta-box {
-      width:100%; background:#1e293b; border-radius:16px;
+      width:100%; background:white; border-radius:12px;
       padding:16px; margin-bottom:16px;
       display:flex; gap:12px; align-items:flex-end;
+      border:2px solid #e0e0e0;
     }
     .pergunta-box textarea {
-      flex:1; min-height:48px; border-radius:12px;
-      border:2px solid #334155; background:#0f172a;
-      color:white; padding:12px; font-size:15px;
+      flex:1; min-height:48px; border-radius:8px;
+      border:2px solid #ddd; background:#fafafa;
+      color:#1a1a1a; padding:12px; font-size:15px;
       resize:none; transition:.3s;
     }
-    .pergunta-box textarea:focus { outline:none; border-color:#38bdf8; }
+    .pergunta-box textarea:focus { outline:none; border-color:#006B3F; }
 
     .btn-enviar {
-      padding:12px 28px; border-radius:12px; border:none;
-      background:linear-gradient(135deg,#38bdf8,#a78bfa);
+      padding:12px 28px; border-radius:8px; border:none;
+      background:#006B3F;
       color:white; font-size:15px; font-weight:600;
       cursor:pointer; transition:.3s; white-space:nowrap; height:48px;
     }
-    .btn-enviar:hover { filter:brightness(1.1); transform:scale(1.02); }
-    .btn-enviar:disabled { opacity:.4; cursor:not-allowed; transform:none!important; }
+    .btn-enviar:hover { background:#005a34; }
+    .btn-enviar:disabled { opacity:.4; cursor:not-allowed; }
 
     /* ── Conexões ── */
     .conexao { display:flex; justify-content:center; margin-bottom:6px; }
-    .linha-v { width:2px; height:18px; background:#475569; }
-    .linha-azul { width:2px; height:16px; background:#38bdf8; }
+    .linha-v { width:2px; height:18px; background:#ccc; }
+    .linha-azul { width:2px; height:16px; background:#006B3F; }
 
     /* ── Grid 3 colunas ── */
     .grid-3 {
@@ -69,42 +73,42 @@
 
     /* ── Card IA ── */
     .ia-card {
-      background:#1e293b; border-radius:16px; padding:14px;
-      text-align:center; border:2px solid #334155;
+      background:white; border-radius:12px; padding:14px;
+      text-align:center; border:2px solid #e0e0e0;
     }
     .ia-card img {
-      width:48px; height:48px; border-radius:12px;
+      width:48px; height:48px; border-radius:10px;
       background:white; padding:4px; object-fit:cover;
     }
-    .ia-card h3 { font-size:16px; margin-top:6px; }
-    .ia-card p { font-size:11px; opacity:.5; }
+    .ia-card h3 { font-size:16px; margin-top:6px; color:#1a1a1a; }
+    .ia-card p { font-size:11px; color:#888; }
 
     /* ── Resposta ── */
     .resposta-card {
-      background:#1e293b; border-radius:16px; padding:14px;
-      border:2px solid #1e40af; min-height:180px;
+      background:white; border-radius:12px; padding:14px;
+      border:2px solid #FFCC29; min-height:180px;
       display:flex; flex-direction:column;
     }
     .resposta-label {
       font-size:11px; font-weight:700; text-transform:uppercase;
-      letter-spacing:1px; color:#38bdf8; margin-bottom:8px;
+      letter-spacing:1px; color:#006B3F; margin-bottom:8px;
     }
     .resposta-texto {
-      font-size:13px; line-height:1.6; opacity:.9; flex:1;
+      font-size:13px; line-height:1.6; color:#333; flex:1;
       overflow-y:auto; white-space:pre-wrap; max-height:280px;
     }
     .resposta-texto::-webkit-scrollbar { width:5px; }
-    .resposta-texto::-webkit-scrollbar-thumb { background:#475569; border-radius:3px; }
+    .resposta-texto::-webkit-scrollbar-thumb { background:#ccc; border-radius:3px; }
 
-    .placeholder { opacity:.25; text-align:center; padding-top:50px; font-size:14px; }
-    .carregando { display:flex; align-items:center; gap:8px; font-size:14px; opacity:.6; padding-top:40px; justify-content:center; }
+    .placeholder { opacity:.3; text-align:center; padding-top:50px; font-size:14px; color:#999; }
+    .carregando { display:flex; align-items:center; gap:8px; font-size:14px; color:#888; padding-top:40px; justify-content:center; }
     .spinner {
-      width:18px; height:18px; border:2px solid #334155;
-      border-top-color:#38bdf8; border-radius:50%;
+      width:18px; height:18px; border:2px solid #e0e0e0;
+      border-top-color:#006B3F; border-radius:50%;
       animation:spin .8s linear infinite;
     }
     @keyframes spin { to { transform:rotate(360deg); } }
-    .erro { color:#f87171; font-size:13px; }
+    .erro { color:#c0392b; font-size:13px; }
 
 
     @media(max-width:700px) {
@@ -120,6 +124,7 @@
   <div class="header">
     <h1>IA Comparativa</h1>
     <p>Como diferentes IAs influenciam decisões humanas?</p>
+    <div class="faixa"></div>
   </div>
 
   <!-- APP -->
@@ -167,7 +172,6 @@
         <div class="resposta-texto" id="texto-gemini"><div class="placeholder">Aguardando pergunta...</div></div>
       </div>
     </div>
-
 
   </div>
 
